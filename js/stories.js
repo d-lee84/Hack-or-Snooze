@@ -23,7 +23,6 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
-        <i class="far fa-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -44,27 +43,30 @@ function putStoriesOnPage() {
 
   $allStoriesList.empty();
 
-
   
-
-
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
 
+
   // Check if you are logged in
-  let favorites = (currentUser) 
-    ? currentUser.favorites
-    : [];
+  if(currentUser) {
+    // loop through all of our stories and generate HTML for them
+    for (let story of storyList.stories) {
+      
+      let $li = $(`#${story.storyId}`);
+      $li.prepend('<i class="far fa-star"></i>');
+    }
 
-  // Loop over the favorites list of the user
-  for(let story of favorites) {
-    let id = story.storyId;
-    let $li = $(`${id}`);
-
+    // Loop over the favorites list of the user
+    for(let story of currentUser.favorites) {
+      let $star = $(`#${story.storyId} > i`);
+      $star.attr("class", "fas fa-star");
+    }
   }
+
 
   // Find the li element by using the story id
 

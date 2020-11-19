@@ -43,4 +43,14 @@ function navSubmitStoryClick(evt) {
 /** Event handler for submit link click
  * shows new story form on DOM
  */
-$("#nav-submit").on("click", navSubmitStoryClick)
+$("#nav-submit").on("click", navSubmitStoryClick);
+
+
+/** Handle Fav link click on Nav 
+ * hides page elements
+ * then shows fav list 
+ */
+function navFavClick(evt) {
+  hidePageComponents();
+  $allFavsList.show();
+}
