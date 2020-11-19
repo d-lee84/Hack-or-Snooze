@@ -37,12 +37,38 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="nav-left" href="#" id="nav-user-links">
+     |  <a class="nav-link" href="#" id="nav-submit">submit</a>
+     |  <a class="nav-link" href="#" id="nav-favorites">favorites</a>
+     |  <a class="nav-link" href="#" id="nav-stories">my stories</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
 </nav>
+
+<!-- Submit new story form -->
+<section class="container" id="submit-story-container">
+  <form id="new-story-form">
+    <div class="form-group row">
+      <label class="col-2" for="author-new-story">author </label>
+      <input class="form-control col-6" id="author-new-story" aria-describedby="authorArea">
+    </div>
+    <div class="form-group row">
+      <label class="col-2" for="title-new-story">title </label>
+      <input class="col-6" class="form-control" id="title-new-story">
+    </div>
+    <div class="form-group row">
+      <label class="col-2" for="url-new-story">url </label>
+      <input class="col-6" type="url" id="url-new-story">
+    </div>
+    <button type="submit" class="btn">submit</button>
+  </form>
+  <hr>
+</section>
+
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">

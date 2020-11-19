@@ -71,6 +71,8 @@ class StoryList {
    * Returns the new Story instance
    */
 
+   // destructure 78-81, 94-96
+   // use API response as source of truth
   async addStory(user, newStory) {
     console.debug("addStory");
 

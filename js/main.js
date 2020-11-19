@@ -8,9 +8,13 @@ const $allStoriesList = $("#all-stories-list");
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
 
+const $newStorySection = $("#submit-story-container");
+const $newStoryForm = $("#new-story-form");
+
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
+const $navUserLinks = $("#nav-user-links");
 
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After
@@ -22,6 +26,8 @@ function hidePageComponents() {
     $allStoriesList,
     $loginForm,
     $signupForm,
+    $navUserLinks,
+    $newStorySection
   ];
   components.forEach(c => c.hide());
 }
@@ -30,6 +36,9 @@ function hidePageComponents() {
 
 async function start() {
   console.debug("start");
+
+  // Clearing the page before initial load of stories
+  hidePageComponents();
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();

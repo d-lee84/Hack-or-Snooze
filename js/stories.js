@@ -48,3 +48,33 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+/**Handling new story form submission
+ * 
+ * collect form data in object {author, title, url}
+ * POST new story via add story method, using currentUser and form data object
+ * update the DOM with new list of stories
+ */
+
+async function submitNewStory(evt) {
+  evt.preventDefault();
+
+  // Story form data
+  let author = $("#author-new-story").val();
+  let title = $("#title-new-story").val();
+  let url = $("#url-new-story").val();
+  let storyInfo = { author, title, url};
+
+  // POST new Story instance
+  await storyList.addStory(currentUser, storyInfo);
+
+  // Update storyList with new list of stories
+  storyList = await StoryList.getStories();
+
+  //Update allStoryList section with new story added
+  putStoriesOnPage();
+}
+
+/** Event handler for new story form submission*/
+
+$newStoryForm.on("submit", submitNewStory);
