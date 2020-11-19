@@ -71,30 +71,21 @@ class StoryList {
    * Returns the new Story instance
    */
 
-   // destructure 78-81, 94-96
-   // use API response as source of truth
   async addStory(user, newStory) {
     console.debug("addStory");
 
     // Get the author, title, url information 
-    let author = newStory.author;
-    let title = newStory.title;
-    let url = newStory.url;
+    
 
     // Make a post request to the server
     let response = await axios.post(`${BASE_URL}/stories`, {
       token: user.loginToken,
-      story: {
-        author,
-        title,
-        url
-      }
+      story: newStory
     });
 
     // Define variables for creating Story instance
+    let { author, title, url, storyId, createdAt } = response.data.story;
     let username = user.username;
-    let storyId = response.data.story.storyId;
-    let createdAt = response.data.story.createdAt;
 
     // Return a Story instance 
     return new Story({ title, author, url, username, storyId, createdAt })

@@ -23,6 +23,7 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        <i class="far fa-star"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -34,17 +35,43 @@ function generateStoryMarkup(story) {
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
+/** Called when the user is logged in, and updates the stories
+ *  if they are in the favorites list for the user
+ */
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
 
+
+  
+
+
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
+
+  // Check if you are logged in
+  let favorites = (currentUser) 
+    ? currentUser.favorites
+    : [];
+
+  // Loop over the favorites list of the user
+  for(let story of favorites) {
+    let id = story.storyId;
+    let $li = $(`${id}`);
+
+  }
+
+  // Find the li element by using the story id
+
+  // Change the star to fas-star (remove far-star class)
+
+
+
 
   $allStoriesList.show();
 }
@@ -78,3 +105,12 @@ async function submitNewStory(evt) {
 /** Event handler for new story form submission*/
 
 $newStoryForm.on("submit", submitNewStory);
+
+
+
+
+/** Function that updates the star icon of the favorite stories */
+
+function putFavsListOnPage() {
+  
+}

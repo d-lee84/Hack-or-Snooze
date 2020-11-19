@@ -112,3 +112,10 @@ function updateUIOnUserLogin() {
 
   updateNavOnLogin();
 }
+
+
+
+
+function generateUserProfile() {
+  
+}
