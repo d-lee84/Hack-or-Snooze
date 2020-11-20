@@ -41,7 +41,11 @@ function updateNavOnLogin() {
 /** Display new story form */
 
 function navSubmitStoryClick(evt) {
+  hidePageComponents();
   $newStorySection.show();
+  $navUserLinks.show();
+  $allStoriesList.show();
+  putStoriesOnPage();
 }
 
 /** Event handler for submit link click

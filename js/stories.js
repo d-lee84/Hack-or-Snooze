@@ -190,8 +190,9 @@ function putUserStoriesOnPage() {
     // loop through all of our stories and generate HTML for them
     for (let story of currentUser.stories) {
       const $story = generateStoryMarkup(story);
-      $ownStoriesList.append($story);
+      $story.prepend('<i class="far fa-edit"></i>');
       $story.prepend('<i class="far fa-trash-alt"></i>');
+      $ownStoriesList.append($story);
     }
 
     putFavStarsOnStories();
@@ -215,3 +216,19 @@ async function deleteStory(evt) {
 
 
 $storiesContainer.on('click', '.fa-trash-alt', deleteStory);
+
+
+
+/** Removes the story from the ownStoriesList Ol
+ *  Updates the page by putting the ownStories back into the DOM */
+
+async function editStory(evt) {
+  let $editIcon = $(evt.target);
+  let storyId = $editIcon.closest('li').attr('id');
+
+  await storyList.removeStory(currentUser, storyId);
+  putUserStoriesOnPage();
+}
+
+
+$storiesContainer.on('click', '.fa-edit', editStory);

@@ -37,3 +37,19 @@
 .story-user {
   display: block;
 }
+
+.fa-trash-alt:hover {
+  color: red;
+}
+
+.fa-edit {
+  margin-left: 6px;
+}
+
+.fa-edit:hover {
+  color: skyblue;
+}
+
+.fa-star:hover {
+  color: green;
+}
