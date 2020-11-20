@@ -75,7 +75,7 @@ class StoryList {
     console.debug("addStory");
 
     // Get the author, title, url information 
-    
+
 
     // Make a post request to the server
     let response = await axios.post(`${BASE_URL}/stories`, {

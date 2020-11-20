@@ -21,8 +21,14 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+
+  let starClass = (currentUser) 
+    ? "far fa-star"
+    : "";
+
   return $(`
       <li id="${story.storyId}">
+        <i class ="${starClass}"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -43,39 +49,34 @@ function putStoriesOnPage() {
 
   $allStoriesList.empty();
 
-  
+
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
 
-
   // Check if you are logged in
-  if(currentUser) {
-    // loop through all of our stories and generate HTML for them
-    for (let story of storyList.stories) {
-      
-      let $li = $(`#${story.storyId}`);
-      $li.prepend('<i class="far fa-star"></i>');
-    }
-
-    // Loop over the favorites list of the user
-    for(let story of currentUser.favorites) {
-      let $star = $(`#${story.storyId} > i`);
-      $star.attr("class", "fas fa-star");
-    }
-  }
-
-
-  // Find the li element by using the story id
-
-  // Change the star to fas-star (remove far-star class)
-
-
-
+  if (currentUser) { putFavStarsOnStories() };
 
   $allStoriesList.show();
+}
+
+
+/** If a user is logged in, put the corresponding star or fav 
+ *  star on all the stories
+*/
+
+function putFavStarsOnStories() {
+
+  // Loop over the favorites list of the user
+  for (let story of currentUser.favorites) {
+    // Find the li element by using the story id
+    let $star = $(`#${story.storyId} > i`);
+
+    // Change the star to fas-star (remove far-star class)
+    $star.attr("class", "fas fa-star");
+  }
 }
 
 /**Handling new story form submission
@@ -92,7 +93,7 @@ async function submitNewStory(evt) {
   let author = $("#author-new-story").val();
   let title = $("#title-new-story").val();
   let url = $("#url-new-story").val();
-  let storyInfo = { author, title, url};
+  let storyInfo = { author, title, url };
 
   // POST new Story instance
   await storyList.addStory(currentUser, storyInfo);
@@ -110,9 +111,21 @@ $newStoryForm.on("submit", submitNewStory);
 
 
 
-
 /** Function that updates the star icon of the favorite stories */
 
 function putFavsListOnPage() {
   
+  $allStoriesList.empty();
+  $allFavsList.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $allFavsList.append($story);
+  }
+
+  putFavStarsOnStories();
+
+  $allFavsList.show();
+
 }

@@ -50,7 +50,12 @@ $("#nav-submit").on("click", navSubmitStoryClick);
  * hides page elements
  * then shows fav list 
  */
+
 function navFavClick(evt) {
-  hidePageComponents();
-  $allFavsList.show();
+  $allStoriesList.hide();
+  putFavsListOnPage();
 }
+
+/** Event handler for "favorites" click on navbar */
+
+$navFavorites.on("click", navFavClick);
