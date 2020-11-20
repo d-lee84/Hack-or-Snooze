@@ -114,9 +114,15 @@ $newStoryForm.on("submit", submitNewStory);
 /** Function that updates the star icon of the favorite stories */
 
 function putFavsListOnPage() {
+  hidePageComponents();
+  $navUserLinks.show();
   
   $allStoriesList.empty();
   $allFavsList.empty();
+
+  if(currentUser.favorites.length === 0) {
+    $allFavsList.html(`<h4>No Favorites Added Yet!</h4>`);
+  }
 
   // loop through all of our stories and generate HTML for them
   for (let story of currentUser.favorites) {
@@ -129,3 +135,18 @@ function putFavsListOnPage() {
   $allFavsList.show();
 
 }
+
+/**Toggle fav star click handler */
+function toggleStoryFavorite(evt) {
+  let $star = $(evt.target);
+  let storyId = $star.closest('li').attr('id');
+  if($star.hasClass('far')) {
+    $star.attr('class', 'fas fa-star');
+    currentUser.addFavorite(storyId);
+  } else {
+    $star.attr('class', 'far fa-star');
+    currentUser.removeFavorite(storyId);
+  }
+}
+
+$storiesContainer.on('click', '.fa-star', toggleStoryFavorite);

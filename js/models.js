@@ -176,4 +176,16 @@ class User {
       return null;
     }
   }
+
+  /**  Add a favorite story */
+  addFavorite(storyToAddId) {
+    let story = storyList.stories.find((s) => s.storyId === storyToAddId);
+    this.favorites.push(story);
+  }
+
+  /** Remove a favorite story */
+  removeFavorite(storyToDeleteId) {
+    let storyIndex = this.favorites.findIndex((s) => s.storyId === storyToDeleteId);
+    this.favorites.splice(storyIndex, 1);
+  }
 }
