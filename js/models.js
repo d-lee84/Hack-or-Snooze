@@ -24,7 +24,7 @@ class Story {
   getHostName() {
     // UNIMPLEMENTED: complete this function!
     const url = new URL(this.url);
-    return url.hostname; 
+    return url.hostname;
   }
 }
 
@@ -99,16 +99,16 @@ class StoryList {
    *  - Updates the server with the removed story
    */
 
-   // Filter the array
-   // Change the order of removing from API then Front end
-   async removeStory(user, storyToDeleteId) {
+  // Filter the array
+  // Change the order of removing from API then Front end
+  async removeStory(user, storyToDeleteId) {
     await axios.delete(`${BASE_URL}/stories/${storyToDeleteId}`,
-      { data: {"token": user.loginToken} });
-    
+      { data: { "token": user.loginToken } });
+
     this.stories = this.stories.filter(
       (s) => s.storyId !== storyToDeleteId
     );
-    
+
     user.stories = user.stories.filter(
       (s) => s.storyId !== storyToDeleteId
     );
@@ -116,9 +116,6 @@ class StoryList {
     user.favorites = user.favorites.filter(
       (s) => s.storyId !== storyToDeleteId
     );
-    // this.stories.splice(storyIndex, 1);
-
-    
   }
 }
 
@@ -163,13 +160,17 @@ class User {
    */
 
   static async signup(username, password, name) {
-    const response = await axios({
-      url: `${BASE_URL}/signup`,
-      method: "POST",
-      data: { user: { username, password, name } },
-    });
-
-    return new User(response.data.user, response.data.token);
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/signup`,
+        method: "POST",
+        data: { user: { username, password, name } },
+      });
+      return new User(response.data.user, response.data.token);
+    } catch (err) {
+      alert('Please select a different username.');
+      return false;
+    }
   }
 
   /** Login in user with API, make User instance & return it.
@@ -211,7 +212,7 @@ class User {
    *   - Finds the story instance and adds to currentUser.favorites
    *   - Updates the server with the storyId to add to favorites
    */
-  
+
   async addFavorite(storyToAddId) {
     let story = storyList.stories.find(
       (s) => s.storyId === storyToAddId
@@ -229,15 +230,13 @@ class User {
   */
 
   async removeFavorite(storyToDeleteId) {
-    await axios.delete(`${BASE_URL}/users/${this.username}` 
-      + `/favorites/${storyToDeleteId}`, { data: {"token": this.loginToken} });
-    
+    await axios.delete(`${BASE_URL}/users/${this.username}`
+      + `/favorites/${storyToDeleteId}`, { data: { "token": this.loginToken } });
+
     this.favorites = this.favorites.filter(
       (s) => s.storyId !== storyToDeleteId
     );
-    this.favorites.splice(storyIndex, 1);
   }
 
-  
-}
 
+}

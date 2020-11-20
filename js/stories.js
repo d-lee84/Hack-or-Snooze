@@ -22,7 +22,7 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
 
-  let starClass = (currentUser) 
+  let starClass = (currentUser)
     ? "far fa-star"
     : "";
 
@@ -131,13 +131,13 @@ function putFavsListOnPage() {
   hidePageComponents();
   $allStoriesList.hide();
   $navUserLinks.show();
-  
+
   $allStoriesList.empty();
   $allFavsList.empty();
   $ownStoriesList.empty();
 
   // Check if there are no favorites 
-  if(currentUser.favorites.length === 0) {
+  if (currentUser.favorites.length === 0) {
     $allFavsList.html(`<h4>No Favorites Added Yet!</h4>`);
   } else {
     // loop through all of our stories and generate HTML for them
@@ -145,7 +145,7 @@ function putFavsListOnPage() {
       const $story = generateStoryMarkup(story);
       $allFavsList.append($story);
     }
-  
+
     putFavStarsOnStories();
   }
 
@@ -158,8 +158,8 @@ async function toggleStoryFavorite(evt) {
   let $star = $(evt.target);
   let storyId = $star.closest('li').attr('id');
   console.log("storyId:", storyId);
-  
-  if($star.hasClass('far')) {
+
+  if ($star.hasClass('far')) {
     $star.attr('class', 'fas fa-star');
     await currentUser.addFavorite(storyId);
   } else {
@@ -178,13 +178,13 @@ $storiesContainer.on('click', '.fa-star', toggleStoryFavorite);
 function putUserStoriesOnPage() {
   hidePageComponents();
   $navUserLinks.show();
-  
+
   $allStoriesList.empty();
   $allFavsList.empty();
   $ownStoriesList.empty();
 
   // Check if there are no favorites 
-  if(currentUser.stories.length === 0) {
+  if (currentUser.stories.length === 0) {
     $ownStoriesList.html(`<h4>No Stories Added Yet!</h4>`);
   } else {
     // loop through all of our stories and generate HTML for them
@@ -193,7 +193,7 @@ function putUserStoriesOnPage() {
       $ownStoriesList.append($story);
       $story.prepend('<i class="far fa-trash-alt"></i>');
     }
-  
+
     putFavStarsOnStories();
   }
 
