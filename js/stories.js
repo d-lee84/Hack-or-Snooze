@@ -48,6 +48,8 @@ function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
+  $allFavsList.empty();
+  $ownStoriesList.empty();
 
 
   // loop through all of our stories and generate HTML for them
@@ -96,7 +98,10 @@ async function submitNewStory(evt) {
   let storyInfo = { author, title, url };
 
   // POST new Story instance
-  await storyList.addStory(currentUser, storyInfo);
+  let newStory = await storyList.addStory(currentUser, storyInfo);
+
+  // add new story to User's own stories list
+  currentUser.ownStories.push(newStory);
 
   // Update storyList with new list of stories
   storyList = await StoryList.getStories();
@@ -115,10 +120,12 @@ $newStoryForm.on("submit", submitNewStory);
 
 function putFavsListOnPage() {
   hidePageComponents();
+  $allStoriesList.hide();
   $navUserLinks.show();
   
   $allStoriesList.empty();
   $allFavsList.empty();
+  $ownStoriesList.empty();
 
   // Check if there are no favorites 
   if(currentUser.favorites.length === 0) {
@@ -153,3 +160,33 @@ async function toggleStoryFavorite(evt) {
 }
 
 $storiesContainer.on('click', '.fa-star', toggleStoryFavorite);
+
+/**Put Own Stories on page
+ * adds each User story to ol on DOM
+ * and prepend trash can icon
+ */
+
+function putUserStoriesOnPage() {
+  hidePageComponents();
+  $navUserLinks.show();
+  
+  $allStoriesList.empty();
+  $allFavsList.empty();
+  $ownStoriesList.empty();
+
+  // Check if there are no favorites 
+  if(currentUser.ownStories.length === 0) {
+    $allFavsList.html(`<h4>No Stories Added Yet!</h4>`);
+  } else {
+    // loop through all of our stories and generate HTML for them
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story);
+      $ownStoriesList.append($story);
+      $story.prepend('<i class="far fa-trash-alt"></i>');
+    }
+  
+    putFavStarsOnStories();
+  }
+
+  $ownStoriesList.show();
+}

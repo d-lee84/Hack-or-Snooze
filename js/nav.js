@@ -56,10 +56,23 @@ $("#nav-submit").on("click", navSubmitStoryClick);
  */
 
 function navFavClick(evt) {
-  $allStoriesList.hide();
   putFavsListOnPage();
 }
 
 /** Event handler for "favorites" click on navbar */
 
 $navFavorites.on("click", navFavClick);
+
+
+/** Handler for my stories link click
+ * Hides pages components
+ * shows nav bar links and own stories
+ */
+
+function navMyStories(evt) {
+  putUserStoriesOnPage();
+}
+
+/**Event handler for My Stories navbar link click */
+
+$navOwnStories.on("click", navMyStories);
