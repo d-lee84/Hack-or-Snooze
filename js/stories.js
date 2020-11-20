@@ -120,32 +120,35 @@ function putFavsListOnPage() {
   $allStoriesList.empty();
   $allFavsList.empty();
 
+  // Check if there are no favorites 
   if(currentUser.favorites.length === 0) {
     $allFavsList.html(`<h4>No Favorites Added Yet!</h4>`);
+  } else {
+    // loop through all of our stories and generate HTML for them
+    for (let story of currentUser.favorites) {
+      const $story = generateStoryMarkup(story);
+      $allFavsList.append($story);
+    }
+  
+    putFavStarsOnStories();
   }
-
-  // loop through all of our stories and generate HTML for them
-  for (let story of currentUser.favorites) {
-    const $story = generateStoryMarkup(story);
-    $allFavsList.append($story);
-  }
-
-  putFavStarsOnStories();
 
   $allFavsList.show();
 
 }
 
 /**Toggle fav star click handler */
-function toggleStoryFavorite(evt) {
+async function toggleStoryFavorite(evt) {
   let $star = $(evt.target);
   let storyId = $star.closest('li').attr('id');
+  console.log("storyId:", storyId);
+  
   if($star.hasClass('far')) {
     $star.attr('class', 'fas fa-star');
-    currentUser.addFavorite(storyId);
+    await currentUser.addFavorite(storyId);
   } else {
     $star.attr('class', 'far fa-star');
-    currentUser.removeFavorite(storyId);
+    await currentUser.removeFavorite(storyId);
   }
 }
 

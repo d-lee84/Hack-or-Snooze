@@ -8,6 +8,10 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   putStoriesOnPage();
+
+  // If there is a user logged in, show nav bar
+  if (currentUser) { $navUserLinks.show() };
+
 }
 
 $body.on("click", "#nav-all", navAllStories);

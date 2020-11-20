@@ -178,14 +178,28 @@ class User {
   }
 
   /**  Add a favorite story */
-  addFavorite(storyToAddId) {
-    let story = storyList.stories.find((s) => s.storyId === storyToAddId);
+  // What does it take?
+  async addFavorite(storyToAddId) {
+    let story = storyList.stories.find(
+      (s) => s.storyId === storyToAddId
+    );
     this.favorites.push(story);
+
+    await axios.post(`${BASE_URL}/users/${this.username}`
+      + `/favorites/${storyToAddId}`, { "token": this.loginToken });
   }
 
   /** Remove a favorite story */
-  removeFavorite(storyToDeleteId) {
-    let storyIndex = this.favorites.findIndex((s) => s.storyId === storyToDeleteId);
+  async removeFavorite(storyToDeleteId) {
+    let storyIndex = this.favorites.findIndex(
+      (s) => s.storyId === storyToDeleteId
+    );
     this.favorites.splice(storyIndex, 1);
+
+    await axios.delete(`${BASE_URL}/users/${this.username}` 
+      + `/favorites/${storyToDeleteId}`, { data: {"token": this.loginToken} });
   }
 }
+
+// axios.delete(`${BASE_URL}/users/dlee84
+//       /favorites/9767559a-b355-400f-902b-7b533f070408`, { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRsZWU4NCIsImlhdCI6MTYwNTgzMzQ5Mn0.57PpcsP4D8AJ1A29jheRSvpxN5o1gr2rqpA5GPRv58w" });
