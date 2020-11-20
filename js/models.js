@@ -117,6 +117,23 @@ class StoryList {
       (s) => s.storyId !== storyToDeleteId
     );
   }
+
+  async editStory(user, storyId, story) {
+    await axios({
+      method: 'patch',
+      url: `${BASE_URL}/stories/${storyId}`,
+      data: {
+        token: user.loginToken, 
+        story
+      }
+    });
+    let storyToEdit = storyList.stories.find(
+      (s) => s.storyId === storyId
+    );
+    for (let key in story) {
+      storyToEdit[key] = story[key];
+    }
+  }
 }
 
 // storyList.addStory(currentUser, {title: "Rithm Won Again", author: "David", url: "https://www.rithmschool.com/courses/intermediate-css-bootstrap/css-transform-transition-animation-exercise'"})
@@ -240,3 +257,4 @@ class User {
 
 
 }
+

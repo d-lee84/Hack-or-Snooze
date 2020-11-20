@@ -224,10 +224,14 @@ $storiesContainer.on('click', '.fa-trash-alt', deleteStory);
 
 async function editStory(evt) {
   let $editIcon = $(evt.target);
-  let storyId = $editIcon.closest('li').attr('id');
+  let $story = $editIcon.closest('li');
+  let storyId = $story.attr('id');
 
-  await storyList.removeStory(currentUser, storyId);
-  putUserStoriesOnPage();
+  $editStoryForm.show();
+  $ownStoriesList.empty();
+  $ownStoriesList.append($story);
+
+  
 }
 
 
