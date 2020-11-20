@@ -74,7 +74,7 @@ function putFavStarsOnStories() {
   // Loop over the favorites list of the user
   for (let story of currentUser.favorites) {
     // Find the li element by using the story id
-    let $star = $(`#${story.storyId} > i`);
+    let $star = $(`#${story.storyId} > i.fa-star`);
 
     // Change the star to fas-star (remove far-star class)
     $star.attr("class", "fas fa-star");
@@ -101,13 +101,22 @@ async function submitNewStory(evt) {
   let newStory = await storyList.addStory(currentUser, storyInfo);
 
   // add new story to User's own stories list
-  currentUser.ownStories.push(newStory);
+  currentUser.stories.push(newStory);
+
+  const response = await axios({
+    url: `${BASE_URL}/users/${currentUser.username}`,
+    method: "GET",
+    params: { token: currentUser.loginToken },
+  });
+  currentUser = new User(response.data.user, currentUser.loginToken);
 
   // Update storyList with new list of stories
   storyList = await StoryList.getStories();
 
   //Update allStoryList section with new story added
   putStoriesOnPage();
+
+  $newStoryForm.trigger("reset");
 }
 
 /** Event handler for new story form submission*/
@@ -175,11 +184,11 @@ function putUserStoriesOnPage() {
   $ownStoriesList.empty();
 
   // Check if there are no favorites 
-  if(currentUser.ownStories.length === 0) {
-    $allFavsList.html(`<h4>No Stories Added Yet!</h4>`);
+  if(currentUser.stories.length === 0) {
+    $ownStoriesList.html(`<h4>No Stories Added Yet!</h4>`);
   } else {
     // loop through all of our stories and generate HTML for them
-    for (let story of currentUser.ownStories) {
+    for (let story of currentUser.stories) {
       const $story = generateStoryMarkup(story);
       $ownStoriesList.append($story);
       $story.prepend('<i class="far fa-trash-alt"></i>');
@@ -190,3 +199,19 @@ function putUserStoriesOnPage() {
 
   $ownStoriesList.show();
 }
+
+
+
+/** Removes the story from the ownStoriesList Ol
+ *  Updates the page by putting the ownStories back into the DOM */
+
+async function deleteStory(evt) {
+  let $deleteIcon = $(evt.target);
+  let storyId = $deleteIcon.closest('li').attr('id');
+
+  await storyList.removeStory(currentUser, storyId);
+  putUserStoriesOnPage();
+}
+
+
+$storiesContainer.on('click', '.fa-trash-alt', deleteStory);

@@ -92,6 +92,34 @@ class StoryList {
     return new Story({ title, author, url, username, storyId, createdAt })
 
   }
+
+  /** Remove a user story
+   *  - Takes in the id of the story to remove
+   *  - Finds the story from the stories list
+   *  - Updates the server with the removed story
+   */
+
+   // Filter the array
+   // Change the order of removing from API then Front end
+   async removeStory(user, storyToDeleteId) {
+    await axios.delete(`${BASE_URL}/stories/${storyToDeleteId}`,
+      { data: {"token": user.loginToken} });
+    
+    this.stories = this.stories.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+    
+    user.stories = user.stories.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+
+    user.favorites = user.favorites.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+    // this.stories.splice(storyIndex, 1);
+
+    
+  }
 }
 
 // storyList.addStory(currentUser, {title: "Rithm Won Again", author: "David", url: "https://www.rithmschool.com/courses/intermediate-css-bootstrap/css-transform-transition-animation-exercise'"})
@@ -103,7 +131,7 @@ class StoryList {
 
 class User {
   /** Make user instance from obj of user data and a token:
-   *   - {username, name, createdAt, favorites[], ownStories[]}
+   *   - {username, name, createdAt, favorites[], stories[]}
    *   - token
    */
 
@@ -112,16 +140,16 @@ class User {
     name,
     createdAt,
     favorites = [],
-    ownStories = []
+    stories = []
   },
     token) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
-    // instantiate Story instances for the user's favorites and ownStories
+    // instantiate Story instances for the user's favorites and stories
     this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.stories = stories.map(s => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -154,7 +182,7 @@ class User {
     const response = await axios({
       url: `${BASE_URL}/login`,
       method: "POST",
-      data: { user: { username, password } },
+      data: { user: { username, password } }
     });
 
     return new User(response.data.user, response.data.token);
@@ -178,8 +206,12 @@ class User {
     }
   }
 
-  /**  Add a favorite story */
-  // What does it take?
+  /**  Add a favorite story
+   *   - Takes in the storyId
+   *   - Finds the story instance and adds to currentUser.favorites
+   *   - Updates the server with the storyId to add to favorites
+   */
+  
   async addFavorite(storyToAddId) {
     let story = storyList.stories.find(
       (s) => s.storyId === storyToAddId
@@ -190,17 +222,22 @@ class User {
       + `/favorites/${storyToAddId}`, { "token": this.loginToken });
   }
 
-  /** Remove a favorite story */
-  async removeFavorite(storyToDeleteId) {
-    let storyIndex = this.favorites.findIndex(
-      (s) => s.storyId === storyToDeleteId
-    );
-    this.favorites.splice(storyIndex, 1);
+  /** Remove a favorite story 
+   *  - Takes in the storyId
+   *  - Finds the story index and removes from currentUser.favorites
+   *  - Updates the server with the storyId to remove from favorites
+  */
 
+  async removeFavorite(storyToDeleteId) {
     await axios.delete(`${BASE_URL}/users/${this.username}` 
       + `/favorites/${storyToDeleteId}`, { data: {"token": this.loginToken} });
+    
+    this.favorites = this.favorites.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+    this.favorites.splice(storyIndex, 1);
   }
+
+  
 }
 
-// axios.delete(`${BASE_URL}/users/dlee84
-//       /favorites/9767559a-b355-400f-902b-7b533f070408`, { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRsZWU4NCIsImlhdCI6MTYwNTgzMzQ5Mn0.57PpcsP4D8AJ1A29jheRSvpxN5o1gr2rqpA5GPRv58w" });
