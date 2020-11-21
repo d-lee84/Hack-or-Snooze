@@ -120,6 +120,3 @@ function updateUIOnUserLogin() {
 
 
 
-function generateUserProfile() {
-
-}

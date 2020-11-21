@@ -109,14 +109,17 @@ class StoryList {
       (s) => s.storyId !== storyToDeleteId
     );
 
-    user.stories = user.stories.filter(
-      (s) => s.storyId !== storyToDeleteId
-    );
-
-    user.favorites = user.favorites.filter(
-      (s) => s.storyId !== storyToDeleteId
-    );
+    user.deleteStory(storyToDeleteId);
   }
+
+  /** Edits story in the server
+   *  - Update the story instance on the storyList.stories
+   *  - Updates the user's stories by calling method on user instance
+   * 
+   * @param {instance of User class: currentUser} user 
+   * @param {ID of the story to edit} storyId 
+   * @param {title, author, url} story 
+   */
 
   async editStory(user, storyId, story) {
     await axios({
@@ -127,12 +130,16 @@ class StoryList {
         story
       }
     });
+
     let storyToEdit = storyList.stories.find(
       (s) => s.storyId === storyId
     );
+
     for (let key in story) {
       storyToEdit[key] = story[key];
     }
+
+    user.updateStory(storyId, story);
   }
 }
 
@@ -255,6 +262,44 @@ class User {
     );
   }
 
+  /** Find and delete the story from the stories and favorites array 
+   *  - pass in the ID of the story to delete
+   */
 
+  deleteStory(storyToDeleteId) {
+    this.stories = this.stories.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+
+    this.favorites = this.favorites.filter(
+      (s) => s.storyId !== storyToDeleteId
+    );
+  }
+
+  /** Find and update the story from the stories and favorites array 
+   *  - pass in the ID of the story to update
+   *  - story: {title, author, url}
+   */
+
+  updateStory(storyId, story) {
+    let storyToEdit = this.stories.find(
+      (s) => s.storyId === storyId
+    );
+
+    for (let key in story) {
+      storyToEdit[key] = story[key];
+    }
+
+    // Update the story if its in the favorites list
+    storyToEdit = this.favorites.find(
+      (s) => s.storyId === storyId
+    );
+    
+    if(storyToEdit) {
+      for (let key in story) {
+        storyToEdit[key] = story[key];
+      }
+    }
+  }
 }
 

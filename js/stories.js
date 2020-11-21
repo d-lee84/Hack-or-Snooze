@@ -47,6 +47,9 @@ function generateStoryMarkup(story) {
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
+  $loginForm.hide();
+  $signupForm.hide();
+
   $allStoriesList.empty();
   $allFavsList.empty();
   $ownStoriesList.empty();
@@ -59,7 +62,10 @@ function putStoriesOnPage() {
   }
 
   // Check if you are logged in
-  if (currentUser) { putFavStarsOnStories() };
+  if (currentUser) { 
+    putFavStarsOnStories(); 
+    $navUserLinks.show();
+  };
 
   $allStoriesList.show();
 }
@@ -219,20 +225,48 @@ $storiesContainer.on('click', '.fa-trash-alt', deleteStory);
 
 
 
-/** Removes the story from the ownStoriesList Ol
- *  Updates the page by putting the ownStories back into the DOM */
+/** Called when the edit icon is clicked
+ *  - Displays the form
+ *  - Shows only the list item that is being edited
+ */
 
-async function editStory(evt) {
+async function showEditStoryForm(evt) {
   let $editIcon = $(evt.target);
   let $story = $editIcon.closest('li');
-  let storyId = $story.attr('id');
 
   $editStoryForm.show();
   $ownStoriesList.empty();
   $ownStoriesList.append($story);
-
-  
 }
 
+$storiesContainer.on('click', '.fa-edit', showEditStoryForm);
 
-$storiesContainer.on('click', '.fa-edit', editStory);
+/** Gets the data from the edit story form 
+ *  - Pass into the editStory method on the StoryList instance
+ *  - update the DOM with the regular user stories
+ */
+
+async function updateStoryOnSubmit(evt) {
+  evt.preventDefault();
+
+  let storyId = $('li').attr("id");
+  let story = storyList.stories.find(
+    (s) => s.storyId === storyId
+  );
+
+  // Edit story form data
+  let author = $("#author-edit-story").val() || story.author;
+  let title = $("#title-edit-story").val() || story.title;
+  let url = $("#url-edit-story").val() || story.url;
+  let storyInfo = { author, title, url };
+
+  // PATCH Story info
+  await storyList.editStory(currentUser, storyId, storyInfo);
+
+  $editStoryForm.trigger("reset");
+  $editStoryForm.hide();
+
+  putUserStoriesOnPage();
+}
+
+$editStoryForm.on("submit", updateStoryOnSubmit);
