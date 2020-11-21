@@ -192,8 +192,9 @@ class User {
       });
       return new User(response.data.user, response.data.token);
     } catch (err) {
-      alert('Please select a different username.');
-      return false;
+      // alert('Please select a different username.');
+      throw new Error('Please select a different username');
+      //return false;
     }
   }
 
